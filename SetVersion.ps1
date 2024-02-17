@@ -2,7 +2,6 @@ $version = $Env:VERSION
 $directory = $Env:DIRECTORY
 $fileName = $Env:FILENAME
 $recursive = [System.Convert]::ToBoolean($Env:RECURSIVE)
-$runNumber = $Env:RUN_NUMBER
 $githubOutput = $Env:GITHUB_OUTPUT
 
 function SetVersion($file)
@@ -25,21 +24,11 @@ function SetVersion($file)
 	}
 }
 
-$isSemVer = [Regex]::Match($version, '^\d+\.\d+(\.\d+)?')
-if ($isSemVer.success)
-{
-	$version = $isSemVer.Value + '.' + $runNumber
-}
-else
-{
-	Write-Host "Version number '$version' is invalid for use in assembly info versions"
-}
-
 if ($recursive)
 {
 	$assemblyInfoFiles = Get-ChildItem $directory -Recurse -Include $fileName
 	foreach($file in $assemblyInfoFiles)
-	{	
+	{
 		SetVersion($file)
 	}
 }
